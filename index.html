@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeropictures Pro | Galerie Mondiale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --bg: #f4f7f6; --card: #ffffff; --text: #2c3e50; --danger: #e74c3c; }
+        body { font-family: 'Open Sans', sans-serif; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { background: #fff; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { display: flex; align-items: center; font-family: 'Montserrat'; font-weight: 700; font-size: 1.5rem; }
+        .logo svg { width: 35px; height: 35px; fill: var(--primary); margin-right: 12px; }
+        
+        nav button { background: none; border: none; padding: 10px 15px; font-family: 'Montserrat'; font-weight: 600; cursor: pointer; color: #7f8c8d; border-radius: 8px; transition: 0.3s; }
+        nav button.active { color: var(--primary); background: rgba(0,123,255,0.08); }
+
+        main { flex: 1; padding: 2rem 5%; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        h2 { font-family: 'Montserrat'; border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; }
+
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.3s; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .card-img { width: 100%; height: 220px; object-fit: cover; }
+        
+        .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+        .airline-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .airline-logo { width: 30px; height: 30px; object-fit: contain; }
+        .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; color: #7f8c8d; }
+        .flag { width: 22px; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+        .download-btn { margin-top: auto; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 700; text-align: center; text-decoration: none; transition: 0.3s; }
+        .download-btn:hover { background: #0056b3; }
+
+        .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
+        .cat-card { background: white; padding: 25px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.3s; font-weight: 600; }
+        .cat-card:hover { border-color: var(--primary); color: var(--primary); transform: scale(1.02); }
+
+        footer { background: #2c3e50; color: #bdc3c7; padding: 10px; text-align: center; font-size: 0.8rem; }
+        .admin-trigger { background: transparent; border: 1px solid #455a64; color: #bdc3c7; padding: 4px 10px; border-radius: 4px; cursor: pointer; margin-left: 15px; }
+
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 480px; max-width: 95%; border-radius: 20px; overflow: hidden; }
+        .modal-header { background: var(--primary); color: white; padding: 20px; display: flex; justify-content: space-between; font-weight: 700; }
+        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+        .tab-nav { display: flex; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .tab-nav button { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-weight: 600; }
+        .tab-nav button.active { border-bottom: 3px solid var(--primary); color: var(--primary); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .delete-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .btn-del { background: var(--danger); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
+            Aeropictures
+        </div>
+        <nav>
+            <button onclick="window.showSection('accueil')" id="nav-accueil" class="active">Accueil</button>
+            <button onclick="window.showSection('aeroports')" id="nav-aeroports">Aéroports</button>
+            <button onclick="window.showSection('compagnies')" id="nav-compagnies">Compagnies</button>
+        </nav>
+    </header>
+
+    <main id="app">Chargement de la base de données...</main>
+
+    <footer>
+        © 2026 Aeropictures | <button class="admin-trigger" onclick="window.openAdmin()">Admin</button>
+    </footer>
+
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><span>Administration</span><span style="cursor:pointer" onclick="window.closeAdmin()">✕</span></div>
+            <div class="tab-nav">
+                <button id="tab-add" class="active" onclick="window.switchTab('add')">Ajouter</button>
+                <button id="tab-manage" onclick="window.switchTab('manage')">Gérer (Supprimer)</button>
+            </div>
+            <div class="modal-body">
+                <div id="panel-add">
+                    <form onsubmit="window.saveToFirebase(event)">
+                        <div class="form-group"><label>URL Image</label><input type="url" id="f-url" required placeholder="https://..."></div>
+                        <div class="form-group"><label>Compagnie</label><input type="text" id="f-air" required placeholder="Ex: Air France"></div>
+                        <div class="form-group"><label>URL Logo Compagnie (Optionnel)</label><input type="url" id="f-logo" placeholder="https://..."></div>
+                        <div class="form-group"><label>Aéroport</label><input type="text" id="f-port" required placeholder="Ex: CDG"></div>
+                        <div class="form-group"><label>Code Pays (ex: fr, us)</label><input type="text" id="f-cc" maxlength="2" required placeholder="fr"></div>
+                        <div class="form-group"><label>Appareil</label><input type="text" id="f-type" required placeholder="Ex: Boeing 777"></div>
+                        <div class="form-group"><label>Date</label><input type="date" id="f-date" required></div>
+                        <button type="submit" class="download-btn" style="width:100%">Publier mondialement</button>
+                    </form>
+                </div>
+                <div id="panel-manage" style="display:none">
+                    <div id="admin-list">Chargement...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // TES CLÉS API (Ne touche pas, elles sont bonnes)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqAa_NUtTDpzuGsKFKVzLGBgGRqrxS0tE",
+            authDomain: "aeropictures-4c07c.firebaseapp.com",
+            projectId: "aeropictures-4c07c",
+            storageBucket: "aeropictures-4c07c.firebasestorage.app",
+            messagingSenderId: "253021934261",
+            appId: "1:253021934261:web:bb5118e7f4ad16704424fc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const photosCol = collection(db, "photos");
+
+        let photos = [];
+
+        // 1. CHARGEMENT DES PHOTOS
+        async function load() {
+            try {
+                // On trie par date décroissante
+                const q = query(photosCol, orderBy("date", "desc"));
+                const snap = await getDocs(q);
+                photos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // Si on est sur l'accueil, on rafraichit l'affichage
+                if(document.getElementById('nav-accueil').classList.contains('active')){
+                    window.showSection('accueil');
+                }
+            } catch (e) {
+                console.error("Erreur de chargement", e);
+                document.getElementById('app').innerHTML = "Erreur de connexion. Vérifiez votre internet.";
+            }
+        }
+
+        // 2. SAUVEGARDE
+        window.saveToFirebase = async (e) => {
+            e.preventDefault();
+            const data = {
+                url: document.getElementById('f-url').value,
+                airline: document.getElementById('f-air').value,
+                logo: document.getElementById('f-logo').value,
+                airport: document.getElementById('f-port').value,
+                country: document.getElementById('f-cc').value.toLowerCase(),
+                type: document.getElementById('f-type').value,
+                date: document.getElementById('f-date').value
+            };
+            
+            try {
+                await addDoc(photosCol, data);
+                alert("Photo publiée avec succès !");
+                e.target.reset();
+                window.closeAdmin();
+                load(); // Recharge la liste
+            } catch (error) {
+                alert("Erreur: " + error.message);
+            }
+        };
+
+        // 3. SUPPRESSION
+        window.deleteFromFirebase = async (id) => {
+            if(confirm("Voulez-vous vraiment supprimer cette photo de la base de données mondiale ?")) {
+                await deleteDoc(doc(db, "photos", id));
+                // Mise à jour de la liste locale et de l'affichage admin
+                photos = photos.filter(p => p.id !== id);
+                renderAdminList(); 
+                load(); // Recharge le site derrière
+            }
+        };
+
+        // 4. AFFICHAGE (Le cœur du design)
+        window.showSection = (name) => {
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-'+name).classList.add('active');
+            const container = document.getElementById('app');
+            
+            if(name === 'accueil') {
+                renderGallery("Derniers Ajouts", photos);
+            } else if(name === 'aeroports') {
+                const ports = [...new Set(photos.map(p => p.airport))];
+                let h = `<h2>Par Aéroport</h2><div class="cat-grid">`;
+                ports.forEach(p => {
+                    const c = photos.find(x => x.airport === p).country;
+                    h += `<div class="cat-card" onclick="window.filterBy('airport','${p}')">
+                            <img src="https://flagcdn.com/w40/${c}.png" class="flag" style="display:block;margin:0 auto 10px"> ${p}
+                          </div>`;
+                });
+                container.innerHTML = h + `</div>`;
+            } else if(name === 'compagnies') {
+                const comps = [...new Set(photos.map(p => p.airline))];
+                let h = `<h2>Par Compagnie</h2><div class="cat-grid">`;
+                comps.forEach(c => {
+                    const l = photos.find(x => x.airline === c).logo;
+                    h += `<div class="cat-card" onclick="window.filterBy('airline','${c}')">
+                            ${l ? `<img src="${l}" style="height:25px;margin-bottom:10px;display:block;margin:0 auto">` : ''} ${c}
+                          </div>`;
+                });
+                container.innerHTML = h + `</div>`;
+            }
+        };
+
+        window.filterBy = (key, val) => {
+            renderGallery(`Filtre : ${val}`, photos.filter(p => p[key] === val));
+        };
+
+        function renderGallery(title, list) {
+            let h = `<h2>${title}</h2><div class="gallery">`;
+            if(list.length === 0) h += "<p>Aucune photo trouvée.</p>";
+            
+            list.forEach(p => {
+                const d = p.date ? p.date.split('-').reverse().join('/') : 'Date inconnue';
+                h += `<div class="card">
+                    <img src="${p.url}" class="card-img" loading="lazy">
+                    <div class="card-body">
+                        <div class="airline-header">
+                            ${p.logo ? `<img src="${p.logo}" class="airline-logo">` : ''} 
+                            <strong>${p.airline}</strong>
+                        </div>
+                        <div class="info-row">✈️ ${p.type}</div>
+                        <div class="info-row">
+                            <img src="https://flagcdn.com/w20/${p.country}.png" class="flag"> ${p.airport}
+                        </div>
+                        <div class="info-row">📅 ${d}</div>
+                        <a href="${p.url}" target="_blank" class="download-btn">Voir / Télécharger</a>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('app').innerHTML = h + `</div>`;
+        }
+
+        // 5. GESTION DU PANEL ADMIN
+        function renderAdminList() {
+            const list = document.getElementById('admin-list');
+            if(photos.length === 0) {
+                list.innerHTML = "Aucune photo à gérer.";
+                return;
+            }
+            list.innerHTML = photos.map(p => `
+                <div class="delete-item">
+                    <span><strong>${p.airline}</strong> (${p.type})</span>
+                    <button class="btn-del" onclick="window.deleteFromFirebase('${p.id}')">Supprimer</button>
+                </div>
+            `).join('');
+        }
+
+        window.openAdmin = () => {
+            if(prompt("Mot de passe admin :") === "admintest3") {
+                document.getElementById('adminModal').style.display = 'flex';
+                // Par défaut on ouvre l'onglet ajouter
+                window.switchTab('add');
+            }
+        };
+
+        window.closeAdmin = () => document.getElementById('adminModal').style.display='none';
+        
+        window.switchTab = (t) => {
+            document.getElementById('panel-add').style.display = t === 'add' ? 'block' : 'none';
+            document.getElementById('panel-manage').style.display = t === 'manage' ? 'block' : 'none';
+            document.getElementById('tab-add').className = t === 'add' ? 'active' : '';
+            document.getElementById('tab-manage').className = t === 'manage' ? 'active' : '';
+            
+            if(t === 'manage') renderAdminList();
+        };
+
+        // Lancer le chargement au démarrage
+        load();
+    </script>
+</body>
+</html>
