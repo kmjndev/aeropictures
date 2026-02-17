@@ -6,51 +6,83 @@
     <title>Aeropictures Pro | Galerie Mondiale</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #007bff; --bg: #f4f7f6; --card: #ffffff; --text: #2c3e50; --danger: #e74c3c; }
+        /* --- VARIABLES DE COULEURS (Thème Clair par défaut) --- */
+        :root { --primary: #007bff; --bg: #f4f7f6; --card: #ffffff; --text: #2c3e50; --text-light: #7f8c8d; --danger: #e74c3c; --border: #eee; }
+        
+        /* --- VARIABLES DU THÈME SOMBRE (Dark Mode) --- */
+        body.dark-mode {
+            --bg: #121212; /* Fond très sombre */
+            --card: #1e1e1e; /* Cartes légèrement plus claires */
+            --text: #e0e0e0; /* Texte clair */
+            --text-light: #aaa; /* Texte secondaire plus clair */
+            --border: #333; /* Bordures sombres */
+        }
+
+        /* --- TRANSITIONS DOUCES POUR LE CHANGEMENT DE THÈME --- */
+        body, header, .card, footer, .modal-content, .cat-card, .info-row, nav button, svg, .airline-logo, input, .delete-item {
+            transition: all 0.3s ease;
+        }
+
         body { font-family: 'Open Sans', sans-serif; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         
-        header { background: #fff; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        /* HEADER MODIFIÉ POUR INCLURE LE BOUTON THÈME */
+        header { background: var(--card); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        body.dark-mode header { border-bottom: 1px solid var(--border); box-shadow: none; }
+
         .logo { display: flex; align-items: center; font-family: 'Montserrat'; font-weight: 700; font-size: 1.5rem; }
         .logo svg { width: 35px; height: 35px; fill: var(--primary); margin-right: 12px; }
         
-        nav button { background: none; border: none; padding: 10px 15px; font-family: 'Montserrat'; font-weight: 600; cursor: pointer; color: #7f8c8d; border-radius: 8px; transition: 0.3s; }
+        /* Conteneur pour la nav et le bouton soleil */
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        nav button { background: none; border: none; padding: 10px 15px; font-family: 'Montserrat'; font-weight: 600; cursor: pointer; color: var(--text-light); border-radius: 8px; }
         nav button.active { color: var(--primary); background: rgba(0,123,255,0.08); }
+        body.dark-mode nav button.active { background: rgba(0,123,255,0.15); }
+
+        /* STYLE DU NOUVEAU BOUTON SOLEIL/LUNE */
+        #theme-toggle { background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        #theme-toggle:hover { background-color: rgba(0,0,0,0.05); }
+        body.dark-mode #theme-toggle:hover { background-color: rgba(255,255,255,0.1); }
+        #theme-icon { width: 24px; height: 24px; fill: var(--text); }
 
         main { flex: 1; padding: 2rem 5%; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         h2 { font-family: 'Montserrat'; border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; }
 
+        /* CARTES ET GALERIE */
         .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-        .card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        body.dark-mode .card { box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .card:hover { transform: translateY(-8px); }
         .card-img { width: 100%; height: 220px; object-fit: cover; }
-        
         .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
         .airline-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
         .airline-logo { width: 30px; height: 30px; object-fit: contain; }
-        .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; color: #7f8c8d; }
+        /* Astuce : inverse les couleurs des logos noirs en mode sombre */
+        body.dark-mode .airline-logo, body.dark-mode .cat-card img:not(.flag) { filter: brightness(0) invert(1); opacity: 0.9; }
+        .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-light); }
         .flag { width: 22px; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-
         .download-btn { margin-top: auto; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 700; text-align: center; text-decoration: none; transition: 0.3s; }
         .download-btn:hover { background: #0056b3; }
 
+        /* CATÉGORIES */
         .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
-        .cat-card { background: white; padding: 25px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.3s; font-weight: 600; }
+        .cat-card { background: var(--card); padding: 25px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid var(--border); font-weight: 600; }
         .cat-card:hover { border-color: var(--primary); color: var(--primary); transform: scale(1.02); }
 
+        /* FOOTER ET MODAL */
         footer { background: #2c3e50; color: #bdc3c7; padding: 10px; text-align: center; font-size: 0.8rem; }
+        body.dark-mode footer { background: #000; color: #888; }
         .admin-trigger { background: transparent; border: 1px solid #455a64; color: #bdc3c7; padding: 4px 10px; border-radius: 4px; cursor: pointer; margin-left: 15px; }
-
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 480px; max-width: 95%; border-radius: 20px; overflow: hidden; }
+        .modal-content { background: var(--card); width: 480px; max-width: 95%; border-radius: 20px; overflow: hidden; color: var(--text); }
         .modal-header { background: var(--primary); color: white; padding: 20px; display: flex; justify-content: space-between; font-weight: 700; }
         .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
-        .tab-nav { display: flex; margin-bottom: 20px; border-bottom: 1px solid #eee; }
-        .tab-nav button { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-weight: 600; }
+        .tab-nav { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .tab-nav button { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-weight: 600; color: var(--text-light); }
         .tab-nav button.active { border-bottom: 3px solid var(--primary); color: var(--primary); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .delete-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; background: var(--card); color: var(--text); }
+        .delete-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
         .btn-del { background: var(--danger); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
@@ -61,17 +93,22 @@
             <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
             Aeropictures
         </div>
-        <nav>
-            <button onclick="window.showSection('accueil')" id="nav-accueil" class="active">Accueil</button>
-            <button onclick="window.showSection('aeroports')" id="nav-aeroports">Aéroports</button>
-            <button onclick="window.showSection('compagnies')" id="nav-compagnies">Compagnies</button>
-        </nav>
+        <div class="header-right">
+            <nav>
+                <button onclick="window.showSection('accueil')" id="nav-accueil" class="active">Accueil</button>
+                <button onclick="window.showSection('aeroports')" id="nav-aeroports">Aéroports</button>
+                <button onclick="window.showSection('compagnies')" id="nav-compagnies">Compagnies</button>
+            </nav>
+            <button id="theme-toggle" onclick="window.toggleTheme()" aria-label="Changer de thème">
+                <svg id="theme-icon" viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,5.29C7.24,6.03 7.1,6.84 7.1,7.7C7.1,8.55 7.24,9.36 7.5,10.11L3.34,8.39V7M3.34,17L7.5,18.71C7.24,17.97 7.1,17.16 7.1,16.3C7.1,15.45 7.24,14.64 7.5,13.89L3.34,15.61V17M12,22L9.61,18.58C10.35,18.85 11.16,19 12,19C12.84,19 13.65,18.85 14.39,18.58L12,22M20.66,17L16.5,18.71C16.76,17.97 16.9,17.16 16.9,16.3C16.9,15.45 16.76,14.64 16.5,13.89L20.66,15.61V17M20.66,7L16.5,5.29C16.76,6.03 16.9,6.84 16.9,7.7C16.9,8.55 16.76,9.36 16.5,10.11L20.66,8.39V7Z" /></svg>
+            </button>
+        </div>
     </header>
 
     <main id="app">Chargement de la base de données...</main>
 
     <footer>
-        © 2026 Aeropictures | <button class="admin-trigger" onclick="window.openAdmin()">Admin</button>
+        La bibliotèque libre de droit de l'aviation | © 2026 Aeropictures | <button class="admin-trigger"onclick="window.openAdmin()">Admin</button>
     </footer>
 
     <div id="adminModal" class="modal">
@@ -94,9 +131,7 @@
                         <button type="submit" class="download-btn" style="width:100%">Publier mondialement</button>
                     </form>
                 </div>
-                <div id="panel-manage" style="display:none">
-                    <div id="admin-list">Chargement...</div>
-                </div>
+                <div id="panel-manage" style="display:none"><div id="admin-list">Chargement...</div></div>
             </div>
         </div>
     </div>
@@ -105,7 +140,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // TES CLÉS API (Ne touche pas, elles sont bonnes)
         const firebaseConfig = {
             apiKey: "AIzaSyAqAa_NUtTDpzuGsKFKVzLGBgGRqrxS0tE",
             authDomain: "aeropictures-4c07c.firebaseapp.com",
@@ -121,25 +155,39 @@
 
         let photos = [];
 
-        // 1. CHARGEMENT DES PHOTOS
+        // --- GESTION DU THÈME SOMBRE (NOUVEAU) ---
+        const sunIcon = "M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,5.29C7.24,6.03 7.1,6.84 7.1,7.7C7.1,8.55 7.24,9.36 7.5,10.11L3.34,8.39V7M3.34,17L7.5,18.71C7.24,17.97 7.1,17.16 7.1,16.3C7.1,15.45 7.24,14.64 7.5,13.89L3.34,15.61V17M12,22L9.61,18.58C10.35,18.85 11.16,19 12,19C12.84,19 13.65,18.85 14.39,18.58L12,22M20.66,17L16.5,18.71C16.76,17.97 16.9,17.16 16.9,16.3C16.9,15.45 16.76,14.64 16.5,13.89L20.66,15.61V17M20.66,7L16.5,5.29C16.76,6.03 16.9,6.84 16.9,7.7C16.9,8.55 16.76,9.36 16.5,10.11L20.66,8.39V7Z";
+        const moonIcon = "M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.81,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.68 19.13,19.09C18.73,19.53 18.3,19.96 17.84,20.37C17.45,20.72 17.06,21.06 16.62,21.34C16.17,21.63 15.67,21.91 15.2,22.14C14.7,22.38 14.15,22.54 13.63,22.71C13.05,22.9 12.45,23 11.84,23C11.21,23 10.6,22.9 10.05,22.71C9.5,22.54 8.96,22.38 8.46,22.14C8,21.91 7.5,21.63 7.06,21.34C6.6,21.06 6.21,20.72 5.83,20.37C5.38,19.96 4.95,19.53 4.54,19.09C4.16,18.68 3.84,18.25 3.5,17.8C3,17.05 3.87,15.87 4.7,15.95C5.13,16 5.55,16.08 5.96,16.19C6.38,16.29 6.79,16.44 7.19,16.6C7.59,16.78 8,16.97 8.4,17.19C8.78,17.4 9.18,17.62 9.56,17.88C9.94,18.13 10.3,18.39 10.68,18.68C11.05,18.96 11.44,19.23 11.84,19.53C12.23,19.23 12.6,18.96 13,18.68C13.37,18.39 13.73,18.13 14.1,17.88C14.47,17.62 14.87,17.4 15.27,17.19C15.66,16.97 16.07,16.78 16.46,16.6C16.87,16.44 17.28,16.29 17.69,16.19C18.1,16.08 18.53,16 18.97,15.95Z";
+
+        window.toggleTheme = () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            // Change l'icône (Soleil <-> Lune)
+            document.getElementById('theme-icon').querySelector('path').setAttribute('d', isDark ? moonIcon : sunIcon);
+            // Sauvegarde le choix dans le navigateur
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        };
+
+        // Charger le thème préféré au démarrage
+        if(localStorage.getItem('theme') === 'dark') {
+            window.toggleTheme();
+        }
+        // -----------------------------------------
+
         async function load() {
             try {
-                // On trie par date décroissante
                 const q = query(photosCol, orderBy("date", "desc"));
                 const snap = await getDocs(q);
                 photos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                
-                // Si on est sur l'accueil, on rafraichit l'affichage
                 if(document.getElementById('nav-accueil').classList.contains('active')){
                     window.showSection('accueil');
                 }
             } catch (e) {
-                console.error("Erreur de chargement", e);
-                document.getElementById('app').innerHTML = "Erreur de connexion. Vérifiez votre internet.";
+                console.error(e);
+                document.getElementById('app').innerHTML = "Erreur de chargement.";
             }
         }
 
-        // 2. SAUVEGARDE
         window.saveToFirebase = async (e) => {
             e.preventDefault();
             const data = {
@@ -151,30 +199,17 @@
                 type: document.getElementById('f-type').value,
                 date: document.getElementById('f-date').value
             };
-            
-            try {
-                await addDoc(photosCol, data);
-                alert("Photo publiée avec succès !");
-                e.target.reset();
-                window.closeAdmin();
-                load(); // Recharge la liste
-            } catch (error) {
-                alert("Erreur: " + error.message);
-            }
+            await addDoc(photosCol, data);
+            alert("Publié !"); e.target.reset(); window.closeAdmin(); load();
         };
 
-        // 3. SUPPRESSION
         window.deleteFromFirebase = async (id) => {
-            if(confirm("Voulez-vous vraiment supprimer cette photo de la base de données mondiale ?")) {
+            if(confirm("Supprimer définitivement ?")) {
                 await deleteDoc(doc(db, "photos", id));
-                // Mise à jour de la liste locale et de l'affichage admin
-                photos = photos.filter(p => p.id !== id);
-                renderAdminList(); 
-                load(); // Recharge le site derrière
+                photos = photos.filter(p => p.id !== id); renderAdminList(); load();
             }
         };
 
-        // 4. AFFICHAGE (Le cœur du design)
         window.showSection = (name) => {
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById('nav-'+name).classList.add('active');
@@ -187,9 +222,7 @@
                 let h = `<h2>Par Aéroport</h2><div class="cat-grid">`;
                 ports.forEach(p => {
                     const c = photos.find(x => x.airport === p).country;
-                    h += `<div class="cat-card" onclick="window.filterBy('airport','${p}')">
-                            <img src="https://flagcdn.com/w40/${c}.png" class="flag" style="display:block;margin:0 auto 10px"> ${p}
-                          </div>`;
+                    h += `<div class="cat-card" onclick="window.filterBy('airport','${p}')"><img src="https://flagcdn.com/w40/${c}.png" class="flag" style="display:block;margin:0 auto 10px"> ${p}</div>`;
                 });
                 container.innerHTML = h + `</div>`;
             } else if(name === 'compagnies') {
@@ -197,78 +230,47 @@
                 let h = `<h2>Par Compagnie</h2><div class="cat-grid">`;
                 comps.forEach(c => {
                     const l = photos.find(x => x.airline === c).logo;
-                    h += `<div class="cat-card" onclick="window.filterBy('airline','${c}')">
-                            ${l ? `<img src="${l}" style="height:25px;margin-bottom:10px;display:block;margin:0 auto">` : ''} ${c}
-                          </div>`;
+                    h += `<div class="cat-card" onclick="window.filterBy('airline','${c}')">${l ? `<img src="${l}" style="height:25px;margin-bottom:10px;display:block;margin:0 auto">` : ''} ${c}</div>`;
                 });
                 container.innerHTML = h + `</div>`;
             }
         };
 
-        window.filterBy = (key, val) => {
-            renderGallery(`Filtre : ${val}`, photos.filter(p => p[key] === val));
-        };
+        window.filterBy = (key, val) => renderGallery(`Filtre : ${val}`, photos.filter(p => p[key] === val));
 
         function renderGallery(title, list) {
             let h = `<h2>${title}</h2><div class="gallery">`;
-            if(list.length === 0) h += "<p>Aucune photo trouvée.</p>";
-            
+            if(list.length === 0) h += "<p>Aucune photo.</p>";
             list.forEach(p => {
-                const d = p.date ? p.date.split('-').reverse().join('/') : 'Date inconnue';
+                const d = p.date ? p.date.split('-').reverse().join('/') : '';
                 h += `<div class="card">
                     <img src="${p.url}" class="card-img" loading="lazy">
                     <div class="card-body">
-                        <div class="airline-header">
-                            ${p.logo ? `<img src="${p.logo}" class="airline-logo">` : ''} 
-                            <strong>${p.airline}</strong>
-                        </div>
+                        <div class="airline-header">${p.logo ? `<img src="${p.logo}" class="airline-logo">` : ''} <strong>${p.airline}</strong></div>
                         <div class="info-row">✈️ ${p.type}</div>
-                        <div class="info-row">
-                            <img src="https://flagcdn.com/w20/${p.country}.png" class="flag"> ${p.airport}
-                        </div>
+                        <div class="info-row"><img src="https://flagcdn.com/w20/${p.country}.png" class="flag"> ${p.airport}</div>
                         <div class="info-row">📅 ${d}</div>
-                        <a href="${p.url}" target="_blank" class="download-btn">Voir / Télécharger</a>
+                        <a href="${p.url}" target="_blank" class="download-btn">Voir</a>
                     </div>
                 </div>`;
             });
             document.getElementById('app').innerHTML = h + `</div>`;
         }
 
-        // 5. GESTION DU PANEL ADMIN
         function renderAdminList() {
             const list = document.getElementById('admin-list');
-            if(photos.length === 0) {
-                list.innerHTML = "Aucune photo à gérer.";
-                return;
-            }
-            list.innerHTML = photos.map(p => `
-                <div class="delete-item">
-                    <span><strong>${p.airline}</strong> (${p.type})</span>
-                    <button class="btn-del" onclick="window.deleteFromFirebase('${p.id}')">Supprimer</button>
-                </div>
-            `).join('');
+            if(photos.length === 0) { list.innerHTML = "Rien à gérer."; return; }
+            list.innerHTML = photos.map(p => `<div class="delete-item"><span>${p.airline} (${p.type})</span><button class="btn-del" onclick="window.deleteFromFirebase('${p.id}')">Supprimer</button></div>`).join('');
         }
 
-        window.openAdmin = () => {
-            if(prompt("Mot de passe admin :") === "admintest3") {
-                document.getElementById('adminModal').style.display = 'flex';
-                // Par défaut on ouvre l'onglet ajouter
-                window.switchTab('add');
-            }
-        };
-
+        window.openAdmin = () => { if(prompt("Mdp:")==="admintest3"){document.getElementById('adminModal').style.display='flex'; window.switchTab('add');}};
         window.closeAdmin = () => document.getElementById('adminModal').style.display='none';
-        
         window.switchTab = (t) => {
-            document.getElementById('panel-add').style.display = t === 'add' ? 'block' : 'none';
-            document.getElementById('panel-manage').style.display = t === 'manage' ? 'block' : 'none';
-            document.getElementById('tab-add').className = t === 'add' ? 'active' : '';
-            document.getElementById('tab-manage').className = t === 'manage' ? 'active' : '';
-            
+            document.getElementById('panel-add').style.display = t==='add'?'block':'none'; document.getElementById('panel-manage').style.display = t==='manage'?'block':'none';
+            document.getElementById('tab-add').className = t==='add'?'active':''; document.getElementById('tab-manage').className = t==='manage'?'active':'';
             if(t === 'manage') renderAdminList();
         };
 
-        // Lancer le chargement au démarrage
         load();
     </script>
 </body>
