@@ -3,76 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aeropictures Pro | Cloud Edition</title>
+    <title>Aeropictures | Photos d'avions libres de droits</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #007bff; --bg: #f4f7f6; --card: #ffffff; --text: #2c3e50; --text-light: #7f8c8d; --border: #eee; --danger: #e74c3c; }
+        :root { --primary: #007bff; --bg: #f4f7f6; --card: #ffffff; --text: #2c3e50; --text-light: #7f8c8d; --border: #eee; --danger: #e74c3c; --accent: #f1c40f; }
+        body.dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --text-light: #94a3b8; --border: #334155; }
         
-        body.dark-mode {
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --text-light: #94a3b8; --border: #334155;
-        }
-
         body { font-family: 'Open Sans', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         
         /* HEADER */
         header { background: var(--card); padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
-        .logo { display: flex; align-items: center; font-family: 'Montserrat'; font-weight: 700; font-size: 1.4rem; color: var(--primary); }
+        .logo { display: flex; align-items: center; font-family: 'Montserrat'; font-weight: 700; font-size: 1.4rem; color: var(--primary); text-decoration: none; }
+        .logo svg { width: 30px; height: 30px; fill: currentColor; margin-right: 10px; }
         
         .header-right { display: flex; align-items: center; gap: 15px; }
+        #theme-toggle { background: var(--bg); border: 1px solid var(--border); cursor: pointer; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text); }
         
-        #theme-toggle { 
-            background: var(--bg); border: 1px solid var(--border); cursor: pointer; 
-            width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            color: var(--text); transition: 0.2s;
-        }
-        #theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
-
         nav button { background: none; border: none; padding: 8px 12px; font-family: 'Montserrat'; font-weight: 600; cursor: pointer; color: var(--text-light); border-radius: 6px; }
         nav button.active { color: var(--primary); background: rgba(0,123,255,0.1); }
 
+        /* TEXTE ACCUEIL & TITRES */
         main { flex: 1; padding: 2rem 5%; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-        h2 { font-family: 'Montserrat'; border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; }
+        .hero-text { background: var(--card); padding: 25px; border-radius: 16px; margin-bottom: 30px; border: 1px solid var(--border); text-align: center; }
+        h2 { font-family: 'Montserrat'; border-left: 5px solid var(--primary); padding-left: 15px; margin: 30px 0 20px 0; text-align: left; }
+        
+        /* TOP 3 SECTION */
+        .top-section { background: rgba(241, 196, 15, 0.08); padding: 20px; border-radius: 20px; border: 2px solid var(--accent); margin-bottom: 40px; }
+        .badge-top { background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.7rem; margin-bottom: 10px; display: inline-block; }
 
-        /* GALERIE */
+        /* GALLERY & CARDS (CENTRAGE PARFAIT DEMANDÉ) */
         .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
-        .card { background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; }
+        .card { background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; transition: 0.3s; }
         .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card-img { width: 100%; height: 210px; object-fit: cover; background: #ddd; }
-        .card-body { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; }
+        .card-img { width: 100%; height: 210px; object-fit: cover; background: #ddd; cursor: pointer; }
         
-        .airline-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .airline-logo { width: 30px; height: 30px; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; }
+        .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .airline-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; width: 100%; }
+        .airline-logo { width: 35px; height: 35px; object-fit: contain; background: white; padding: 2px; border-radius: 5px; border: 1px solid #eee; }
+        .info-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-light); width: 100%; }
+        .flag { width: 22px; border-radius: 3px; }
         
-        .info-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-light); }
-        .flag { width: 20px; border-radius: 2px; }
-        .download-btn { display: block; width: 100%; margin-top: auto; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
-
-        /* CATEGORIES GRID */
-        .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-        .cat-card { background: var(--card); padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid var(--border); transition: 0.3s; }
-        .cat-card:hover { border-color: var(--primary); transform: scale(1.02); }
+        .download-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin-top: auto; width: 100%; box-sizing: border-box; }
 
         /* ADMIN MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card); width: 450px; max-width: 90%; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); width: 480px; max-width: 95%; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
         .modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; font-weight: 700; }
         .tab-nav { display: flex; border-bottom: 1px solid var(--border); }
-        .tab-nav button { flex: 1; padding: 12px; border: none; background: none; cursor: pointer; color: var(--text-light); font-weight: 600; }
+        .tab-nav button { flex: 1; padding: 15px; border: none; background: none; cursor: pointer; color: var(--text-light); font-weight: 700; }
         .tab-nav button.active { border-bottom: 3px solid var(--primary); color: var(--primary); }
-        .modal-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
+        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+        input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; }
+        .del-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); }
         
-        input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; }
-        .delete-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        .btn-del { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        /* FOOTER */
+        footer { padding: 30px 5%; border-top: 1px solid var(--border); text-align: center; margin-top: 50px; background: var(--card); }
+        .footer-links { margin-bottom: 15px; display: flex; justify-content: center; gap: 20px; }
+        .footer-links a { color: var(--text-light); text-decoration: none; font-size: 0.9rem; cursor: pointer; }
+        .admin-trigger { background: none; border: 1px solid var(--border); color: var(--text-light); padding: 5px 10px; border-radius: 5px; cursor: pointer; }
 
-        footer { padding: 20px; text-align: center; font-size: 0.75rem; color: var(--text-light); border-top: 1px solid var(--border); }
-        .admin-trigger { opacity: 0.3; background: none; border: 1px solid var(--text-light); color: var(--text-light); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
+        /* GRID CATEGORIES */
+        .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .cat-card { background: var(--card); padding: 25px; border-radius: 15px; text-align: center; cursor: pointer; border: 1px solid var(--border); transition: 0.3s; font-weight: 700; }
+        .cat-card:hover { border-color: var(--primary); transform: scale(1.03); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">AEROPICTURES</div>
+        <a href="#" class="logo" onclick="location.reload()">
+            <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
+            AEROPICTURES
+        </a>
         <div class="header-right">
             <nav>
                 <button onclick="window.showSection('accueil')" id="nav-accueil" class="active">Flux</button>
@@ -80,39 +82,43 @@
                 <button onclick="window.showSection('compagnies')" id="nav-compagnies">Compagnies</button>
             </nav>
             <button id="theme-toggle" onclick="window.toggleTheme()">
-                <svg id="theme-icon" viewBox="0 0 24 24"><path id="icon-path" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path id="icon-path" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </button>
         </div>
     </header>
 
-    <main id="app">Initialisation...</main>
+    <main id="app">Chargement...</main>
 
     <footer>
-        © 2026 Aeropictures • <button class="admin-trigger" onclick="window.openAdmin()">ADMIN</button>
+        <div class="footer-links">
+            <a href="politique.pdf" target="_blank">Politique d'utilisation</a>
+            <a onclick="alert('Politique de publication : Les photos doivent être de haute qualité avec les infos exactes.')">Politique de publication de photo</a>
+        </div>
+        <div>© 2026 Aeropictures • <button class="admin-trigger" onclick="window.openAdmin()">ADMIN</button></div>
     </footer>
 
     <div id="adminModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span>Espace Admin</span><span style="cursor:pointer" onclick="window.closeAdmin()">✕</span></div>
+            <div class="modal-header"><span>Gestion Aeropictures</span><span style="cursor:pointer" onclick="window.closeAdmin()">✕</span></div>
             <div class="tab-nav">
-                <button id="tab-add" class="active" onclick="window.switchTab('add')">Ajouter</button>
-                <button id="tab-manage" onclick="window.switchTab('manage')">Supprimer</button>
+                <button id="tab-add" class="active" onclick="window.switchTab('add')">PUBLIER</button>
+                <button id="tab-manage" onclick="window.switchTab('manage')">SUPPRIMER</button>
             </div>
             <div class="modal-body">
                 <div id="panel-add">
                     <form onsubmit="window.saveToFirebase(event)">
-                        <input type="url" id="f-url" placeholder="URL Image Directe" required>
+                        <input type="url" id="f-url" placeholder="URL Directe de l'image" required>
                         <input type="text" id="f-air" placeholder="Compagnie (ex: Air France)" required>
-                        <input type="url" id="f-logo" placeholder="URL Logo (Optionnel)">
-                        <input type="text" id="f-port" placeholder="Aéroport (ex: CDG)" required>
-                        <input type="text" id="f-cc" placeholder="Code Pays (ex: fr)" required maxlength="2">
-                        <input type="text" id="f-type" placeholder="Appareil (ex: A350)" required>
+                        <input type="url" id="f-logo" placeholder="URL du Logo Compagnie">
+                        <input type="text" id="f-port" placeholder="Aéroport (ex: Paris CDG)" required>
+                        <input type="text" id="f-cc" placeholder="Code Pays (ex: fr, us, gb)" required maxlength="2">
+                        <input type="text" id="f-type" placeholder="Appareil (ex: Airbus A350)" required>
                         <input type="date" id="f-date" required>
-                        <button type="submit" class="download-btn" style="background:var(--primary)">Publier la photo</button>
+                        <button type="submit" class="download-btn">Ajouter la photo</button>
                     </form>
                 </div>
                 <div id="panel-manage" style="display:none">
-                    <div id="admin-list">Chargement...</div>
+                    <div id="admin-list"></div>
                 </div>
             </div>
         </div>
@@ -136,18 +142,14 @@
         const photosCol = collection(db, "photos");
         let photos = [];
 
-        // --- THEME ---
-        const sunPath = "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z";
-        const moonPath = "M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z";
+        // --- THÈME ---
         window.toggleTheme = () => {
             document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            document.getElementById('icon-path').setAttribute('d', isDark ? moonPath : sunPath);
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
         };
-        if(localStorage.getItem('theme') === 'dark') window.toggleTheme();
+        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 
-        // --- CORE FUNCTIONS ---
+        // --- CHARGEMENT ---
         async function load() {
             const q = query(photosCol, orderBy("date", "desc"));
             const snap = await getDocs(q);
@@ -155,20 +157,87 @@
             window.showSection('accueil');
         }
 
-        window.saveToFirebase = async (e) => {
-            e.preventDefault();
-            const data = {
-                url: document.getElementById('f-url').value,
-                airline: document.getElementById('f-air').value,
-                logo: document.getElementById('f-logo').value,
-                airport: document.getElementById('f-port').value,
-                country: document.getElementById('f-cc').value.toLowerCase(),
-                type: document.getElementById('f-type').value,
-                date: document.getElementById('f-date').value
-            };
-            await addDoc(photosCol, data);
-            alert("Photo ajoutée !"); window.closeAdmin(); load();
+        window.showSection = (name) => {
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-'+name).classList.add('active');
+            const container = document.getElementById('app');
+            
+            if(name === 'accueil') {
+                container.innerHTML = `
+                <div class="hero-text">
+                    <h1>Photographie Aéronautique Libre de Droits</h1>
+                    <p>Bienvenue sur <strong>Aeropictures</strong>. Toutes nos photos sont en accès libre et gratuites pour un usage personnel et créatif. Explorez les plus belles captures de notre communauté.</p>
+                </div>
+                <section class="top-section">
+                    <h2>⭐ Meilleures photos de la semaine</h2>
+                    <div class="gallery" id="top-gallery"></div>
+                </section>
+                <h2>Dernières publications</h2>
+                <div class="gallery" id="main-gallery"></div>`;
+                renderGallery(photos.slice(0, 3), 'top-gallery', true);
+                renderGallery(photos, 'main-gallery');
+            } else if(name === 'aeroports') {
+                const ports = [...new Set(photos.map(p => p.airport))];
+                container.innerHTML = `<h2>Par Aéroport</h2><div class="cat-grid">` + 
+                    ports.map(p => {
+                        const c = photos.find(x => x.airport === p)?.country;
+                        return `<div class="cat-card" onclick="window.filterBy('airport','${p}')">
+                        <img src="https://flagcdn.com/w40/${c}.png" class="flag" style="display:block;margin:0 auto 10px"> ${p}</div>`;
+                    }).join('') + `</div>`;
+            } else if(name === 'compagnies') {
+                const comps = [...new Set(photos.map(p => p.airline))];
+                container.innerHTML = `<h2>Par Compagnie</h2><div class="cat-grid">` + 
+                    comps.map(c => {
+                        const l = photos.find(x => x.airline === c)?.logo;
+                        return `<div class="cat-card" onclick="window.filterBy('airline','${c}')">
+                        ${l ? `<img src="${l}" style="height:35px;margin-bottom:10px;display:block;margin:0 auto;object-fit:contain">` : ''} ${c}</div>`;
+                    }).join('') + `</div>`;
+            }
         };
+
+        window.filterBy = (k, v) => {
+            document.getElementById('app').innerHTML = `<h2>Résultats : ${v}</h2><div class="gallery" id="f-gal"></div>`;
+            renderGallery(photos.filter(p => p[k] === v), 'f-gal');
+        };
+
+        function renderGallery(list, targetId, isTop = false) {
+            document.getElementById(targetId).innerHTML = list.map(p => `
+                <div class="card">
+                    <img src="${p.url}" class="card-img" onclick="window.open('${p.url}', '_blank')">
+                    <div class="card-body">
+                        ${isTop ? '<span class="badge-top">⭐ TOP SEMAINE</span>' : ''}
+                        <div class="airline-header">
+                            <img src="${p.logo || 'https://www.svgrepo.com/show/491563/airplane.svg'}" class="airline-logo">
+                            <strong>${p.airline}</strong>
+                        </div>
+                        <div class="info-row">✈️ ${p.type}</div>
+                        <div class="info-row"><img src="https://flagcdn.com/w20/${p.country}.png" class="flag"> ${p.airport}</div>
+                        <a href="${p.url}" target="_blank" class="download-btn">TÉLÉCHARGER LA PHOTO</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- ADMIN ---
+        window.openAdmin = () => { if(prompt("Pass?")==="admintest3") document.getElementById('adminModal').style.display='flex'; };
+        window.closeAdmin = () => document.getElementById('adminModal').style.display='none';
+        
+        window.switchTab = (t) => {
+            document.getElementById('panel-add').style.display = t === 'add' ? 'block' : 'none';
+            document.getElementById('panel-manage').style.display = t === 'manage' ? 'block' : 'none';
+            document.getElementById('tab-add').className = t === 'add' ? 'active' : '';
+            document.getElementById('tab-manage').className = t === 'manage' ? 'active' : '';
+            if(t === 'manage') renderAdminList();
+        };
+
+        function renderAdminList() {
+            document.getElementById('admin-list').innerHTML = photos.map(p => `
+                <div class="del-item">
+                    <span>${p.airline} (${p.airport})</span>
+                    <button onclick="window.deletePhoto('${p.id}')" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer">Supprimer</button>
+                </div>
+            `).join('');
+        }
 
         window.deletePhoto = async (id) => {
             if(confirm("Supprimer cette photo ?")) {
@@ -177,56 +246,18 @@
             }
         };
 
-        window.showSection = (name) => {
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById('nav-'+name).classList.add('active');
-            const container = document.getElementById('app');
-            
-            if(name === 'accueil') {
-                renderGallery("Flux Mondial", photos);
-            } else if(name === 'aeroports') {
-                const ports = [...new Set(photos.map(p => p.airport))];
-                container.innerHTML = `<h2>Par Aéroport</h2><div class="cat-grid">` + 
-                    ports.map(p => `<div class="cat-card" onclick="window.filterBy('airport','${p}')">✈️ ${p}</div>`).join('') + `</div>`;
-            } else if(name === 'compagnies') {
-                const comps = [...new Set(photos.map(p => p.airline))];
-                container.innerHTML = `<h2>Par Compagnie</h2><div class="cat-grid">` + 
-                    comps.map(c => `<div class="cat-card" onclick="window.filterBy('airline','${c}')">${c}</div>`).join('') + `</div>`;
-            }
-        };
-
-        window.filterBy = (key, val) => renderGallery(`Filtre : ${val}`, photos.filter(p => p[key] === val));
-
-        function renderGallery(title, list) {
-            let h = `<h2>${title}</h2><div class="gallery">`;
-            list.forEach(p => {
-                const logo = p.logo || "https://www.svgrepo.com/show/491563/airplane.svg";
-                h += `<div class="card">
-                    <img src="${p.url}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1506012733851-462978393e2b?q=80&w=500&auto=format&fit=crop'">
-                    <div class="card-body">
-                        <div class="airline-header"><img src="${logo}" class="airline-logo"> <strong>${p.airline}</strong></div>
-                        <div class="info-row">✈️ ${p.type}</div>
-                        <div class="info-row"><img src="https://flagcdn.com/w20/${p.country}.png" class="flag"> ${p.airport}</div>
-                        <a href="${p.url}" target="_blank" class="download-btn">VOIR HD</a>
-                    </div>
-                </div>`;
+        window.saveToFirebase = async (e) => {
+            e.preventDefault();
+            await addDoc(photosCol, {
+                url: document.getElementById('f-url').value,
+                airline: document.getElementById('f-air').value,
+                logo: document.getElementById('f-logo').value,
+                airport: document.getElementById('f-port').value,
+                country: document.getElementById('f-cc').value.toLowerCase(),
+                type: document.getElementById('f-type').value,
+                date: document.getElementById('f-date').value
             });
-            document.getElementById('app').innerHTML = h + `</div>`;
-        }
-
-        // --- ADMIN UI ---
-        window.openAdmin = () => { if(prompt("Pass?")==="admintest3") document.getElementById('adminModal').style.display='flex'; };
-        window.closeAdmin = () => document.getElementById('adminModal').style.display='none';
-        window.switchTab = (t) => {
-            document.getElementById('panel-add').style.display = t==='add'?'block':'none';
-            document.getElementById('panel-manage').style.display = t==='manage'?'block':'none';
-            document.getElementById('tab-add').className = t==='add'?'active':'';
-            document.getElementById('tab-manage').className = t==='manage'?'active':'';
-            if(t==='manage') {
-                document.getElementById('admin-list').innerHTML = photos.map(p => `
-                    <div class="delete-item"><span>${p.airline} - ${p.airport}</span><button class="btn-del" onclick="window.deletePhoto('${p.id}')">Suppr.</button></div>
-                `).join('');
-            }
+            alert("Photo publiée !"); window.closeAdmin(); load();
         };
 
         load();
